@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <title>CHICKTOPIA</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <div class="main">
+        <header>
+            <h1>Farm Fresh Poultry</h1>
+            <div class="line"></div>
+            <h2>TASTE THE DIFFERENCE</h2>
+            <a href="#" class="ctn">Learn More</a>
+    </div>
+</header>
+
+<!-- About Us -->
+
+<section class="about">
+    <div class="row">
+        <div class="col">
+        <img src="{% static 'images/2.jpg' %}" alt="Description" class="about-image">
+</div>
+
+    <div class="col">
+        <h4> Where Tradition Meets Innovation</h4>
+        <p> We are passionate about raising healthy, happy chickens in a sustainable and ethical environment. Our journey began with a simple love for farming, and over the years, we have dedicated ourselves to nurturing our flock and providing high-quality eggs and poultry to our community. With a commitment to sustainable practices and animal welfare, we believe in the importance of connecting people with the source of their food. Join us as we continue to grow and share our story, one egg at a time. </p>
+    <a href="#" class="ctn">About Us </a>
+
+    </div>
+    </div>
+</section>
+
+<div class="navbar">
+    <div class="logo">
+        <img src="{% static 'images/logo1.png' %}" alt="CHICKTOPIA Logo" class="logo-image">
+    </div>
+    <div class="menu">
+        <ul>
+            <li><a href="#">HOME</a></li>
+            <li>
+                <a href="#">PRODUCTS</a>
+                <ul class="dropdown">
+                    <li><a href="#">BROILER</a></li>
+                    <li><a href="#">LAYERS</a></li>
+                    <li><a href="#">KIENYEJI</a></li>
+                </ul>
+            </li>
+            <li><a href="#">CUSTOMER</a></li>
+            <li><a href="#">SERVICE</a></li>
+            <li><a href="#">FLOCK</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- PRODUCTS -->
+
+<section class="products" id="products">
+    <h1 class="heading">Latest <span>Products</span></h1>
+
+    <div class="box-container">
+        <div class="image">
+            <img src="{% static 'images/15.jpg' %}" alt="Japan logo" class="japan-image">
+            <div class="content">
+                <h3>Yokohama Chicken, also known as "Yokohama Satsuma," is a Japanese breed of chicken that originated in the Yokohama area.</h3>
+            </div>
+        </div>
+
+        <div class="image">
+            <img src="{% static 'images/14.jpg' %}" alt="Shingo logo" class="shingo-image">
+            <div class="content">
+                <h3>Shingo</h3>
+            </div>
+        </div>
+        <!-- Add more images here if needed -->
+    </div>
+</section>
+
+<!-- Review Section -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<section class="review" id="review"> 
+
+    <h1 class="heading"> Customers <span>Review</span></h1>
+
+    <div class="box-container">
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/23.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Wendy Lope</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/22.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Hamisa Wafula</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/25.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Ian Rulo</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+    </div>
+</section>
+
+
+
+<!-- Last Section -->
+
+
+<section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <h3>Locations</h3>
+            <a href="#">Kisumu</a>
+        </div>
+        
+        <div class="box">
+            <h3>Contact Info</h3>
+            <a href="tel:+25411222333">+254 11 222 333</a>
+            <a href="mailto:Chicktopia@gmail.com">Chicktopia@gmail.com</a>
+            <a href="#">Nyahera, Kisumu - 100100</a>
+            <div class="image-container">
+                <img src="{% static 'images/mpesa-logo.png' %}" alt="Mpesa Logo">
+                <img src="{% static 'images/MC.png' %}" alt="MC Logo">
+                <img src="{% static 'images/PP.jpg' %}" alt="PP Logo">
+            </div>
+
+        </div>
+    </div>
+
+    <p>© 2025 Chicktopia LTD</p>
+</section>
+
+</body>
+</html>
