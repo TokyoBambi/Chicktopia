@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            margin-top: 100px; /* Increase if navbar is taller */
+            flex: 1;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+}
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .about, .services {
+            margin-bottom: 20px;
+        }
+        ul {
+            
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+
+
+
+    <!-- Navigation bar -->
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <section class="about">
+            <h2>🌿 About Us</h2>
+            <p>
+                At <strong>Chicktopia</strong>, we are dedicated to providing expert veterinary and poultry consultancy services.
+                Our mission is to ensure the health and well-being of your livestock through quality care, expert advice,
+                and modern farming techniques.
+            </p>
+        </section>
+    
+        <section class="services">
+            <h2>🛠️ Our Services</h2>
+            <ul class="service-list">
+                <li>🩺 <strong>Veterinary Check ups & Treatment</strong> – Ensuring your poultry stay healthy and disease-free.</li>
+                <li>💉 <strong>Poultry Disease Management</strong> – Prevention and control of common poultry diseases.</li>
+                <li>🥕 <strong>Nutrition & Feeding Consultation</strong> – Customized diet plans for optimal growth and productivity.</li>
+                <li>🏡 <strong>Farm Management Advice</strong> – Expert guidance on farm operations and efficiency.</li>
+            </ul>
+        </section>
+    </div>
+    
+
+    {% include 'footer.html' %}
+
+
+
+{% endblock %}
