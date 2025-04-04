@@ -1,0 +1,145 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<!-- Navigation bar -->
+{% include 'navbar.html' %}
+
+
+<!-- Header -->
+<div class="main">
+    <header>
+        <h1>Farm Fresh Poultry</h1>
+        <div class="line"></div>
+        <h2>TASTE THE DIFFERENCE</h2>
+        <a href="{% url 'broiler' %}" class="btn">Explore More &#8594;</a>
+    </header>
+</div>
+
+<!-- About Us -->
+
+<section class="about-us">
+    <div class="row">
+        <div class="col">
+        <img src="{% static 'images/2.jpg' %}" alt="Description" class="about-image">
+</div>
+
+    <div class="col">
+        <h4> Where Tradition Meets Innovation</h4>
+        <p> We are passionate about raising healthy, happy chickens in a sustainable and ethical environment. Our journey began with a simple love for farming, and over the years, we have dedicated ourselves to nurturing our flock and providing high-quality eggs and poultry to our community. With a commitment to sustainable practices and animal welfare, we believe in the importance of connecting people with the source of their food. Join us as we continue to grow and share our story, one egg at a time. </p>
+    <a href="#" class="ctn">About Us </a>
+
+    </div>
+    </div>
+</section>
+
+<!-- PRODUCTS -->
+
+<section class="categories" id="categories"> 
+    <h2 class="heading">Latest <span>Products</span></h2>
+
+    <div class="box-container">
+        <div class="row">
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/15.jpg' %}">
+                    <h3>"Yokohama Satsuma"</h3>
+                    <p>Ksh 10,000</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/14.jpg' %}">
+                    <h3>Shingo</h3>
+                    <p>Ksh 15,000</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/43.jpeg' %}">
+                    <h3>Hair</h3>
+                    <p>Ksh 15,000</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            
+
+
+<!-- Review Section -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<section class="review" id="review"> 
+
+    <h1 class="heading"> Customers <span>Review</span></h1>
+
+    <div class="box-container">
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/23.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Wendy Lope</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/22.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Hamisa Wafula</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>"I've been purchasing eggs from this farm for over a year, and I couldn't be happier! The quality is outstanding, and you can really taste the difference. The hens are clearly well cared for, and it's great to support a local farm. Highly recommend!"</p>
+        <div class="user">
+            <img src="{% static 'images/25.jpg' %}" alt="">
+            <div class="user-info">
+                <h3> Ian Rulo</h3>
+                <span> Happy customer</span>
+
+            </div>
+        </div>
+        <span class="fas fa-quote-right"></span>
+    </div>
+    </div>
+</section>
+
+
+
+<!-- Footer -->
+{% include 'footer.html' %}
+
+
+{% endblock %}

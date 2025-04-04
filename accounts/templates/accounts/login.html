@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        <form method="POST" action=""> 
+            {% csrf_token %}
+                        
+            <div class="form-group">
+                <label for="username">Username</label>
+                <i class='bx bxs-user'></i>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+                <div class="form-group">
+                <label for="password">Password</label>
+                <i class='bx bxs-lock'></i>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+
+            <div class="flex-container">
+            <label>
+                <input type="checkbox" name="remember"> Remember Me
+            </label>
+            <div style="margin-bottom: 15px;"></div> <!-- Spacer div -->
+            <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+            <input type="submit" value="Login">
+
+            <div class="register-link">
+                <p>Don't have an account? 
+                    <a href="{% url 'register' %}">Register</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

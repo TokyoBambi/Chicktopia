@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if sale %}Edit Sale{% else %}Create Sale{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold">{% if sale %}Edit Sale{% else %}Create New Sale{% endif %}</h1>
+    </div>
+
+    <form method="post" class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 max-w-3xl mx-auto">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Sale Information</h2>
+                
+                <!-- Order Field -->
+                <div class="mb-4">
+                    <label for="{{ form.order.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Order</label>
+                    {{ form.order }}
+                    {% if form.order.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.order.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Customer Field -->
+                <div class="mb-4">
+                    <label for="{{ form.customer.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer</label>
+                    {{ form.customer }}
+                    {% if form.customer.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.customer.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Sale Date Field -->
+                <div class="mb-4">
+                    <label for="{{ form.sale_date.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sale Date</label>
+                    {{ form.sale_date }}
+                    {% if form.sale_date.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.sale_date.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Financial Details</h2>
+                
+                <!-- Total Amount Field -->
+                <div class="mb-4">
+                    <label for="{{ form.total_amount.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Total Amount</label>
+                    {{ form.total_amount }}
+                    {% if form.total_amount.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.total_amount.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Profit Field -->
+                <div class="mb-4">
+                    <label for="{{ form.profit.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profit</label>
+                    {{ form.profit }}
+                    {% if form.profit.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.profit.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Products</h2>
+            
+            <!-- Products Field -->
+            <div class="mb-4">
+                <label for="{{ form.products.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Products Sold</label>
+                {{ form.products }}
+                {% if form.products.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.products.errors }}</p>
+                {% endif %}
+                <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple products</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-end">
+            <a href="{% url 'sale_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                Cancel
+            </a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if sale %}Update Sale{% else %}Create Sale{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

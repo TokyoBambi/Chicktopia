@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<!-- Navigation bar -->
+{% include 'navbar.html' %}
+
+<div class="main-kienyeji">
+    <header style="display: flex; justify-content: flex-end;">
+        <div class="box">
+            <h1>Kienyeji</h1>
+            <p> Taste the Tradition: Kienyeji Chicken</p>
+            <div class="line"></div>
+        </div>
+    </header>
+</div>
+
+<div class="order-section">
+    <h2> Place your order here <a href="#" class="button">Book Now</a> </h2>
+</div>
+
+<!-- Shopping Cart Panel -->
+{% include 'cart.html' %}
+
+<!-- about Kienyeji -->
+ 
+<section class="about">
+    <div class="row">
+        <div class="col">
+            <img src="{% static 'images/29.jpeg' %}" alt="Description" class="about-image">
+        </div>
+
+        <div class="col">
+            <h4> Kienyeji</h4>
+            <p>Kienyeji chicken represents not just a food source but also a connection to cultural heritage and sustainable farming practices. Its growing popularity reflects a shift towards healthier and more traditional eating habits.</p>
+                
+                <h2>Nutritional Benefits</h2>
+                <ul>
+                    <li><strong>Healthier Meat:</strong> Kienyeji chicken is often leaner and contains less fat compared to commercially raised chickens. It is also rich in protein and essential nutrients.</li>
+                    <br>
+                    <li><strong>Flavorful Taste:</strong> Many people prefer the taste of Kienyeji chicken, describing it as richer and more flavorful than conventional poultry.</li>
+                </ul>
+        </div>
+    </div>
+</section>
+
+<section class="feeds" id="feeds"> 
+    <h2 class="heading">Kienyeji <span>Available</span></h2>
+
+    <div class="box-container">
+        <div class="row">
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/53.jpeg' %}" alt="Broiler Starter">
+                    <h3>"Broiler Starter"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/54.jpeg' %}" alt="Broiler Grower">
+                    <h3>"CHICKS 1yr old"</h3>
+                    <p>Ksh 3,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/55.jpeg' %}" alt="Broiler Finisher">
+                    <h3>"Broiler Finisher"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/56.jpeg' %}" alt="Layer Starter">
+                    <h3>"Layer Starter"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/57.jpeg' %}" alt="Layer Starter">
+                    <h3>"Layer Starter"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+        </div>
+    </div>
+</section>
+
+{% include 'footer.html' %}
+{% endblock %}

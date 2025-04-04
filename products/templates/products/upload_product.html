@@ -1,0 +1,81 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<!-- Navigation bar -->
+{% include 'navbar.html' %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        form {
+            width: 80%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        input[type="text"], input[type="file"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<div class="main-upload">
+    <header style="display: flex; justify-content: flex-end;">
+        </div>
+    </header>
+
+    <h2 class="heading">Upload <span>Products</span></h2>
+
+<form action="{% url 'upload_product' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <label for="title">Product Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="type">Product Type:</label>
+    <select id="type" name="type" required>
+        <option value="broiler">Broiler</option>
+        <option value="layer">Layer</option>
+        <option value="kienyeji">Kienyeji</option>
+        <option value="feeds">Feeds</option>
+    </select>
+
+    <label for="region">Region:</label>
+    <input type="text" id="region" name="region" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price" required>
+
+    <label for="quantity">Quantity:</label>
+    <input type="text" id="quantity" name="quantity" required>
+
+    <label for="photo">Upload Product Image:</label>
+    <input type="file" id="photo" name="photo" accept="photo/*" required>
+
+    <button type="submit">Upload Product</button>
+</form>
+
+{% include 'footer.html' %}
+{% endblock %}

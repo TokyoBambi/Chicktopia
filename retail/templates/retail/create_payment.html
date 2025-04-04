@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if payment %}Edit Payment{% else %}Create Payment{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold">{% if payment %}Edit Payment{% else %}Add Payment{% endif %} for Order #{{ order.id|truncatechars:8 }}</h1>
+    </div>
+
+    <form method="post" class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 max-w-2xl mx-auto">
+        {% csrf_token %}
+        
+        <!-- Order Information (readonly) -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Order Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ order.id|truncatechars:8 }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Date</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ order.date_ordered }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Status</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ order.get_status_display }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Total</div>
+                <div class="text-sm text-gray-900 dark:text-white">${{ order.total_amount }}</div>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Payment Details</h2>
+            
+            <!-- Payment Method Field -->
+            <div class="mb-4">
+                <label for="{{ form.payment_method.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Payment Method</label>
+                {{ form.payment_method }}
+                {% if form.payment_method.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.payment_method.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Amount Paid Field -->
+            <div class="mb-4">
+                <label for="{{ form.amount_paid.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount Paid</label>
+                {{ form.amount_paid }}
+                {% if form.amount_paid.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.amount_paid.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Transaction ID Field -->
+            <div class="mb-4">
+                <label for="{{ form.transaction_id.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Transaction ID</label>
+                {{ form.transaction_id }}
+                {% if form.transaction_id.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.transaction_id.errors }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Status Field -->
+            <div class="mb-4">
+                <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.status.errors }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-end">
+            <a href="{% if payment %}{% url 'payment_detail' payment_id=payment.id %}{% else %}{% url 'order_detail' order_id=order.id %}{% endif %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                Cancel
+            </a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if payment %}Update Payment{% else %}Add Payment{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

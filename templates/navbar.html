@@ -1,0 +1,44 @@
+{% load static %}
+
+<div class="navbar">
+  <div class="logo">
+    <img
+      src="{% static 'images/logo1.png' %}"
+      alt="CHICKTOPIA Logo"
+      class="logo-image"
+    />
+  </div>
+  <div class="menu">
+    <ul>
+      <li><a href="{% url 'dashboard' %}">HOME</a></li>
+      <li>
+        <a href="#">PRODUCTS</a>
+        <ul class="dropdown">
+          <li><a href="{% url 'broiler' %}">BROILER</a></li>
+          <li><a href="{% url 'layers' %}">LAYERS</a></li>
+          <li><a href="{% url 'kienyeji' %}">KIENYEJI</a></li>
+          <li><a href="{% url 'feeds' %}">FEEDS</a></li>
+        </ul>
+      </li>
+      <li><a href="{% url 'upload_product' %}">SELL</a></li>
+      <li><a href="{% url 'services' %}">SERVICE</a></li>
+      <li><a href="{% url 'about_us' %}">ABOUT US</a></li>
+      {% if request.user.is_authenticated %}
+      <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+      {% else %}
+      <li><a href="{% url 'login' %}">LOGIN</a></li>
+      {% endif %}
+
+      <div class="cart-icon" id="cart-icon">
+        <img
+          src="{% static 'images/cart.png' %}"
+          width="40px"
+          height="40px"
+          class="active-cart"
+        />
+        <span class="cart-badge">{{ cart_item_count }}</span>
+        <!-- Number of items in the cart -->
+      </div>
+    </ul>
+  </div>
+</div>

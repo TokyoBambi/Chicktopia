@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Update Order {{ order.id }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Order Details -->
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-select">
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="shipping_address" class="form-label">Shipping Address</label>
+            <textarea name="shipping_address" id="shipping_address" class="form-control">{{ order.shipping_address }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone_number" class="form-label">Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ order.phone_number }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="notes" class="form-label">Notes</label>
+            <textarea name="notes" id="notes" class="form-control">{{ order.notes }}</textarea>
+        </div>
+
+        <hr>
+
+        <!-- Existing Items -->
+        <h4>Order Items</h4>
+        {% for item in order_items %}
+            <div class="mb-3 row align-items-center">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <label class="col-sm-6 col-form-label">{{ item.product.name }}</label>
+                <div class="col-sm-3">
+                    <input type="number" name="item_quantity" class="form-control" value="{{ item.quantity }}" min="0">
+                </div>
+            </div>
+        {% empty %}
+            <p>No items in this order.</p>
+        {% endfor %}
+
+        <hr>
+
+        <!-- Add New Items -->
+        <h4>Add New Items</h4>
+        <div id="new-items-container">
+            <div class="row mb-3 new-item-row">
+                <div class="col-sm-6">
+                    <select name="new_product" class="form-select">
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} - {{ product.price }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="new_quantity" class="form-control" placeholder="Qty" min="1">
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-danger remove-item">Remove</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="add-new-item" class="btn btn-secondary mb-4">+ Add Another Product</button>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Update Order</button>
+            <a href="{% url 'order_detail' order.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // JavaScript to clone new product row
+    document.getElementById('add-new-item').addEventListener('click', function () {
+        const container = document.getElementById('new-items-container');
+        const newRow = container.querySelector('.new-item-row').cloneNode(true);
+
+        newRow.querySelector('input[name="new_quantity"]').value = '';
+        container.appendChild(newRow);
+    });
+
+    // Handle removal of new product rows
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-item')) {
+            const row = e.target.closest('.new-item-row');
+            row.remove();
+        }
+    });
+</script>
+{% endblock %}

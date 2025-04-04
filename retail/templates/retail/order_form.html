@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if order %}Edit Order{% else %}Create Order{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold">{% if order %}Edit Order{% else %}Create New Order{% endif %}</h1>
+    </div>
+
+    <form method="post" class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Order Information</h2>
+                
+                <!-- User Field -->
+                <div class="mb-4">
+                    <label for="{{ order_form.user.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer</label>
+                    {{ order_form.user }}
+                    {% if order_form.user.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ order_form.user.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Status Field -->
+                <div class="mb-4">
+                    <label for="{{ order_form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                    {{ order_form.status }}
+                    {% if order_form.status.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ order_form.status.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Customer Details</h2>
+                
+                <!-- Shipping Address Field -->
+                <div class="mb-4">
+                    <label for="{{ order_form.shipping_address.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Shipping Address</label>
+                    {{ order_form.shipping_address }}
+                    {% if order_form.shipping_address.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ order_form.shipping_address.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Phone Number Field -->
+                <div class="mb-4">
+                    <label for="{{ order_form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                    {{ order_form.phone_number }}
+                    {% if order_form.phone_number.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ order_form.phone_number.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Notes Field -->
+                <div class="mb-4">
+                    <label for="{{ order_form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
+                    {{ order_form.notes }}
+                    {% if order_form.notes.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ order_form.notes.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Order Items</h2>
+            
+            {{ formset.management_form }}
+            {% if formset.non_form_errors %}
+            <div class="text-red-500 mb-4">
+                {% for error in formset.non_form_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quantity</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="order-items">
+                        {% for form in formset %}
+                        <tr class="item-form {% if form.instance.pk %}has-instance{% else %}no-instance{% endif %}">
+                            <td class="px-6 py-4">
+                                {{ form.id }}
+                                {{ form.product }}
+                                {% if form.product.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ form.product.errors }}</p>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ form.quantity }}
+                                {% if form.quantity.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ form.quantity.errors }}</p>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-end">
+            <a href="{% url 'order_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                Cancel
+            </a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if order %}Update Order{% else %}Create Order{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
