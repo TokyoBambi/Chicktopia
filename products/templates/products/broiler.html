@@ -1,0 +1,84 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<!-- Navigation bar -->
+{% include 'navbar.html' %}
+
+<div class="main-broiler">
+    <header style="display: flex; justify-content: flex-end;">
+        <div class="box">
+            <h1>Broilers</h1>
+            <p>Fresh from Farm to Fork</p>
+            <div class="line"></div>
+        </div>
+    </header>
+</div>
+
+<div class="order-section">
+    <h2> Place your order here <a href="#" class="button">Book Now</a> </h2>  
+</div>
+    
+<!-- about Broiler -->
+ 
+<section class="about">
+    <div class="row">
+        <div class="col">
+            <img src="{% static 'images/28.jpeg' %}" alt="Description" class="about-image">
+        </div>
+
+        <div class="col">
+            <h4> Broilers</h4>
+            <p> We take pride in providing the highest quality broilers, raised with care from farm to fork. Our broilers are sourced from reputable farms that prioritize animal welfare and sustainable practices. Each bird is nurtured in a healthy environment, ensuring optimal growth and well-being. We adhere to strict quality standards, guaranteeing that our broilers are not only delicious but also safe for consumption. Whether it's for a family meal or a large gathering, our fresh broilers are versatile and perfect for a variety of culinary creations. Discover the taste of quality with our broilers, and experience the difference that careful farming makes in every bite. </p>
+        </div>
+    </div>
+</section>
+
+<!-- Shopping Cart Panel -->
+
+{% include 'cart.html' %}
+
+<!--  Broiler products -->
+
+<section class="broiler" id="broiler"> 
+    <h2 class="heading">Broilers <span>Available</span></h2>
+
+    <div class="box-container">
+        <div class="row">
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/44.jpeg' %}" alt="Broiler Starter">
+                    <h3>"Broiler Starter"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/45.jpeg' %}" alt="Broiler Grower">
+                    <h3>"CHICKS 1yr old"</h3>
+                    <p>Ksh 3,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/46.jpeg' %}" alt="Broiler Finisher">
+                    <h3>"Broiler Finisher"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="feeds-item">
+                    <img src="{% static 'images/47.jpeg' %}" alt="Layer Starter">
+                    <h3>"Layer Starter"</h3>
+                    <p>Ksh 10,000</p>
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+{% include 'footer.html' %}
+{% endblock %}

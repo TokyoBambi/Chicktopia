@@ -1,35 +1,22 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-    <title>CHICKTOPIA</title>
-    <style>
-        body {
-            font-family: Georgia, 'Times New Roman', Times, serif;
-        }
-    </style>
+<!-- Navigation bar -->
+{% include 'navbar.html' %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-</head>
-<body>
-    <div class="main">
-        <header>
-            <h1>Farm Fresh Poultry</h1>
-            <div class="line"></div>
-            <h2>TASTE THE DIFFERENCE</h2>
-            <a href="#" class="ctn">Learn More</a>
-    </div>
-</header>
+
+<!-- Header -->
+<div class="main">
+    <header>
+        <h1>Farm Fresh Poultry</h1>
+        <div class="line"></div>
+        <h2>TASTE THE DIFFERENCE</h2>
+        <a href="{% url 'broiler' %}" class="btn">Explore More &#8594;</a>
+    </header>
+</div>
 
 <!-- About Us -->
 
-<section class="about">
+<section class="about-us">
     <div class="row">
         <div class="col">
         <img src="{% static 'images/2.jpg' %}" alt="Description" class="about-image">
@@ -44,50 +31,39 @@
     </div>
 </section>
 
-<div class="navbar">
-    <div class="logo">
-        <img src="{% static 'images/logo1.png' %}" alt="CHICKTOPIA Logo" class="logo-image">
-    </div>
-    <div class="menu">
-        <ul>
-            <li><a href="#">HOME</a></li>
-            <li>
-                <a href="#">PRODUCTS</a>
-                <ul class="dropdown">
-                    <li><a href="#">BROILER</a></li>
-                    <li><a href="#">LAYERS</a></li>
-                    <li><a href="#">KIENYEJI</a></li>
-                </ul>
-            </li>
-            <li><a href="#">CUSTOMER</a></li>
-            <li><a href="#">SERVICE</a></li>
-            <li><a href="#">FLOCK</a></li>
-        </ul>
-    </div>
-</div>
-
 <!-- PRODUCTS -->
 
-<section class="products" id="products">
-    <h1 class="heading">Latest <span>Products</span></h1>
+<section class="categories" id="categories"> 
+    <h2 class="heading">Latest <span>Products</span></h2>
 
     <div class="box-container">
-        <div class="image">
-            <img src="{% static 'images/15.jpg' %}" alt="Japan logo" class="japan-image">
-            <div class="content">
-                <h3>Yokohama Chicken, also known as "Yokohama Satsuma," is a Japanese breed of chicken that originated in the Yokohama area.</h3>
+        <div class="row">
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/15.jpg' %}">
+                    <h3>"Yokohama Satsuma"</h3>
+                    <p>Ksh 10,000</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/14.jpg' %}">
+                    <h3>Shingo</h3>
+                    <p>Ksh 15,000</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="product-item">
+                    <img src="{% static 'images/43.jpeg' %}">
+                    <h3>Hair</h3>
+                    <p>Ksh 15,000</p>
+                </div>
             </div>
         </div>
-
-        <div class="image">
-            <img src="{% static 'images/14.jpg' %}" alt="Shingo logo" class="shingo-image">
-            <div class="content">
-                <h3>Shingo</h3>
-            </div>
-        </div>
-        <!-- Add more images here if needed -->
     </div>
 </section>
+            
+
 
 <!-- Review Section -->
 
@@ -162,32 +138,8 @@
 
 
 
-<!-- Last Section -->
+<!-- Footer -->
+{% include 'footer.html' %}
 
 
-<section class="footer">
-    <div class="box-container">
-        <div class="box">
-            <h3>Locations</h3>
-            <a href="#">Kisumu</a>
-        </div>
-        
-        <div class="box">
-            <h3>Contact Info</h3>
-            <a href="tel:+25411222333">+254 11 222 333</a>
-            <a href="mailto:Chicktopia@gmail.com">Chicktopia@gmail.com</a>
-            <a href="#">Nyahera, Kisumu - 100100</a>
-            <div class="image-container">
-                <img src="{% static 'images/mpesa-logo.png' %}" alt="Mpesa Logo">
-                <img src="{% static 'images/MC.png' %}" alt="MC Logo">
-                <img src="{% static 'images/PP.jpg' %}" alt="PP Logo">
-            </div>
-
-        </div>
-    </div>
-
-    <p>© 2025 Chicktopia LTD</p>
-</section>
-
-</body>
-</html>
+{% endblock %}

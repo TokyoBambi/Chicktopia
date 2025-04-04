@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment #{{ payment.id|truncatechars:8 }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Payment #{{ payment.id|truncatechars:8 }}</h1>
+        <div>
+            <a href="{% url 'update_payment' payment_id=payment.id %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                Edit Payment
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Payment Information -->
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Payment Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Method</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ payment.get_payment_method_display }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Amount Paid</div>
+                <div class="text-sm text-gray-900 dark:text-white">${{ payment.amount_paid }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Date</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ payment.payment_date }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</div>
+                <div class="text-sm text-gray-900 dark:text-white">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        {% if payment.status == 'pending' %}bg-yellow-100 text-yellow-800{% endif %}
+                        {% if payment.status == 'completed' %}bg-green-100 text-green-800{% endif %}
+                        {% if payment.status == 'failed' %}bg-red-100 text-red-800{% endif %}
+                        {% if payment.status == 'refunded' %}bg-purple-100 text-purple-800{% endif %}">
+                        {{ payment.get_status_display }}
+                    </span>
+                </div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Transaction ID</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ payment.transaction_id|default:"Not provided" }}</div>
+            </div>
+        </div>
+
+        <!-- Order Information -->
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Order Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</div>
+                <div class="text-sm text-gray-900 dark:text-white">
+                    <a href="{% url 'order_detail' order_id=payment.order.id %}" class="text-indigo-600 hover:text-indigo-900">
+                        {{ payment.order.id|truncatechars:8 }}
+                    </a>
+                </div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Date</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ payment.order.date_ordered }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Status</div>
+                <div class="text-sm text-gray-900 dark:text-white">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        {% if payment.order.status == 'pending' %}bg-yellow-100 text-yellow-800{% endif %}
+                        {% if payment.order.status == 'processing' %}bg-blue-100 text-blue-800{% endif %}
+                        {% if payment.order.status == 'paid' %}bg-green-100 text-green-800{% endif %}
+                        {% if payment.order.status == 'shipped' %}bg-purple-100 text-purple-800{% endif %}
+                        {% if payment.order.status == 'delivered' %}bg-indigo-100 text-indigo-800{% endif %}
+                        {% if payment.order.status == 'cancelled' %}bg-red-100 text-red-800{% endif %}">
+                        {{ payment.order.get_status_display }}
+                    </span>
+                </div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Total</div>
+                <div class="text-sm text-gray-900 dark:text-white">${{ payment.order.total_amount }}</div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Customer</div>
+                <div class="text-sm text-gray-900 dark:text-white">{{ payment.order.user.username|default:"Guest" }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

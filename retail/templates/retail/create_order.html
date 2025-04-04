@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Create New Order</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- User ID (optional, mostly for admin use) -->
+        {% if request.user.is_staff %}
+        <div class="mb-3">
+            <label for="user" class="form-label">User ID (optional)</label>
+            <input type="text" class="form-control" id="user" name="user" placeholder="Enter user ID">
+        </div>
+        {% endif %}
+
+        <!-- Status -->
+        <div class="mb-3">
+            <label for="status" class="form-label">Order Status</label>
+            <select class="form-select" id="status" name="status">
+                {% for key, value in status_choices %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="mb-3">
+            <label for="shipping_address" class="form-label">Shipping Address</label>
+            <textarea class="form-control" id="shipping_address" name="shipping_address" rows="2" required></textarea>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="mb-3">
+            <label for="phone_number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-3">
+            <label for="notes" class="form-label">Additional Notes</label>
+            <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+        </div>
+
+        <hr>
+
+        <!-- Product selection -->
+        <h5>Products</h5>
+        <div id="products-container">
+            {% for product in products %}
+            <div class="mb-3 row">
+                <div class="col-md-6">
+                    <label class="form-label">{{ product.name }}</label>
+                    <input type="hidden" name="product" value="{{ product.id }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="quantity" min="0" value="0" class="form-control" placeholder="Quantity">
+                </div>
+                <div class="col-md-3">
+                    <span class="text-muted">Price: {{ product.price }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Order</button>
+    </form>
+</div>
+{% endblock %}

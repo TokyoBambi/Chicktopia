@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="checkout-container">
+    <h1>Checkout</h1>
+    
+    <!-- Enhanced Debug information -->
+    <div class="debug-info" style="background: #f8f8f8; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; font-family: monospace; overflow: auto; max-height: 400px;">
+        <h3>Enhanced Debug Information</h3>
+        <p>Has items: {{ debug_info.has_items }}</p>
+        <p>Number of items: {{ debug_info.num_items }}</p>
+        <p>Session keys: {{ debug_info.session_keys|join:", " }}</p>
+        
+        <h4>Raw cart_items variable:</h4>
+        <pre>{{ cart_items }}</pre>
+        
+        <h4>Individual cart items:</h4>
+        {% for item in cart_items %}
+        <div style="border: 1px solid #ccc; padding: 8px; margin-bottom: 8px;">
+            <p>Title: {{ item.title }}</p>
+            <p>Price: {{ item.price }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Total: {{ item.total }}</p>
+            <p>Image URL: {{ item.imageUrl }}</p>
+            <p>All keys: {% for key, value in item.items %}{{ key }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        </div>
+        {% empty %}
+        <p style="color: red;">No items in cart_items list</p>
+        {% endfor %}
+        
+        <h4>Cart data (JSON):</h4>
+        <pre>{{ debug_info.cart_data }}</pre>
+    </div>
+    
+    {% if cart_items %}
+    <div class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="cart-items-summary">
+            {% for item in cart_items %}
+            <div class="checkout-item">
+                <img src="{{ item.imageUrl }}" alt="{{ item.title }}" width="80">
+                <div class="item-details">
+                    <h4>{{ item.title }}</h4>
+                    <p>Ksh {{ item.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p class="item-subtotal">Subtotal: Ksh {{ item.total }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="order-total">
+            <p><strong>Total: Ksh {{ total_price }}</strong></p>
+        </div>
+        
+        <div class="payment-section">
+            <h3>Payment Method</h3>
+            <div class="payment-options">
+                <label>
+                    <input type="radio" name="payment_method" value="mpesa" checked>
+                    M-Pesa
+                </label>
+                <!-- Add other payment methods if needed -->
+            </div>
+            
+            <button class="make-payment-btn">Make Payment</button>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-cart-message">
+        <p>Your cart is empty. <a href="{% url 'feeds' %}">Continue shopping</a></p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Your existing styles... */
+</style>
+{% endblock %}
