@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail-container">
+    <h1>{{ product.title }}</h1>
+    <img src="{{ product.photo.url }}" alt="{{ product.title }}" width="300">
+    <p><strong>Price:</strong> Ksh {{ product.price }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Quantity Available:</strong> {{ product.quantity }}</p>
+    <a href="{% url 'add_to_cart' product.id %}" class="btn" data-title="{{ product.title }}" data-price="{{ product.price }}">Add to Cart</a>
+</div>
+{% endblock %}

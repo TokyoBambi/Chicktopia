@@ -1,0 +1,935 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+.main {
+  width: 100%;
+  height: 100vh;
+  background-image: url("../images/13.png");
+  background-position: bottom;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+header {
+  margin-bottom: 150px;
+  color: rgb(230, 223, 223);
+  text-align: center;
+}
+
+.line {
+  width: 150px;
+  height: 3px;
+  background: #fc036b;
+  margin: 5px auto;
+}
+
+header h2 {
+  font-size: 5vmin;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #fc036b;
+  border-radius: 30px;
+  color: whitesmoke;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions for hover effects */
+}
+
+.btn:hover {
+  background-color: #e6005c; /* Darker shade for hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.navbar {
+  margin-top: -20px;
+  display: flex;
+
+  justify-content: space-between; /* Space between logo and menu */
+  align-items: center; /* Center items vertically */
+  padding: 10px 20px; /* Adjust padding as needed */
+  background-color: rgba(212, 209, 10, 0.719); /* Semi-transparent */
+  position: fixed; /* Fixes the navbar at the top */
+  top: 0; /* Aligns it to the very top */
+  left: 0; /* Aligns it to the left */
+  width: 100%; /* Full width */
+  z-index: 1000; /* Ensure it stays on top of other elements */
+}
+
+.logo-image {
+  width: 150px; /* Adjust width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+ul li {
+  margin: 0 30px;
+}
+
+.menu a:hover {
+  color: white; /* Change text color on hover */
+  background-color: #fc036b; /* Change background color on hover */
+
+  border-radius: 5px; /* Optional: round the corners */
+}
+
+/* Cart */
+
+.active-cart {
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.active-cart:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.cart-icon {
+  position: relative; /* Position relative to the icon */
+  display: inline-block; /* Allow positioning of the badge */
+}
+
+.cart-badge {
+  position: absolute; /* Position absolutely within the cart-icon */
+  top: -7px; /* Adjust as needed */
+  right: -10px; /* Adjust as needed */
+  background-color: red; /* Background color for the badge */
+  color: white; /* Text color */
+  border-radius: 50%; /* Make it circular */
+  width: 20px; /* Fixed width */
+  height: 20px; /* Fixed height */
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Center vertically */
+
+  justify-content: center; /* Center horizontally */
+  font-size: 12px; /* Font size */
+  font-weight: bold; /* Bold text */
+  visibility: hidden;
+}
+
+/* Shopping cart section */
+
+.close-icon {
+  font-size: 17px; /* Size of the icon */
+  color: #333; /* Color of the icon */
+  cursor: pointer; /* Pointer cursor on hover */
+  position: absolute; /* Position it at the top right */
+  top: 0px; /* Space from the top */
+  right: 20px; /* Space from the right */
+  transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+.close-icon:hover {
+  color: red; /* Change color on hover */
+}
+
+.shopping-cart-panel {
+  display: none;
+  width: 350px; /* Fixed width for cart panel */
+  background-color: #ffffff; /* White background */
+  border-left: 1px solid #ddd; /* Light grey border for separation */
+  padding: 20px; /* Padding inside the panel */
+  position: fixed; /* Keep it fixed on the right side */
+
+  top: 130px; /* Align to top */
+  right: 0; /* Align to right */
+  height: 100%; /* Full height */
+  overflow-y: auto; /* Scroll if content overflows */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  font-family: Arial, sans-serif; /* Font style */
+}
+
+.shopping-cart-panel.active {
+  display: block; /* Show the cart when active */
+}
+
+.close-icon {
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.cart-icon {
+  cursor: pointer;
+}
+
+.shopping-cart-panel h2 {
+  margin-bottom: 20px; /* Space below heading */
+  font-size: 24px; /* Font size for heading */
+  color: #333; /* Dark grey color for text */
+
+  border-bottom: 2px solid #007bff; /* Blue underline */
+  padding-bottom: 10px; /* Padding below heading */
+}
+
+.cart-items {
+  margin-bottom: 20px; /* Space before total */
+}
+
+.cart-item {
+  justify-content: space-between;
+  display: flex; /* Flexbox for item layout */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 15px; /* Space between items */
+  padding: 10px; /* Padding inside each item */
+  border: 1px solid #eee; /* Light border around items */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background for items */
+}
+
+.cart-item img {
+  width: 70px; /* Fixed width for item image */
+  height: 50px; /* Fixed height to maintain consistency */
+  object-fit: cover; /* Ensure the image covers the space */
+  margin-right: 10px; /* Space between image and details */
+}
+
+.shopping-cart-panel h4 {
+  font-size: 16px; /* Adjust the size as needed */
+  color: #333; /* You can keep the same color or change it */
+
+  margin: 0; /* Remove any default margin */
+  margin-bottom: 5px;
+}
+
+.item-details {
+  flex: 1; /* Allow details to take remaining space */
+}
+
+.quantity-control {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center items vertically */
+}
+
+.quantity-control button {
+  background-color: #007bff; /* Blue button background */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 5px 10px; /* Padding */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.quantity-control button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.quantity {
+  margin: 0 10px; /* Space between buttons and quantity */
+
+  width: 30px; /* Fixed width for quantity display */
+  text-align: center; /* Center the text */
+}
+
+.remove-btn {
+  background-color: red; /* Red button for removal */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 5px 10px; /* Padding */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.remove-btn:hover {
+  background-color: darkred; /* Darker red on hover */
+}
+
+.cart-total {
+  font-size: 18px; /* Font size for total */
+  font-weight: bold; /* Bold text */
+  margin-top: 20px; /* Space above total */
+  margin-bottom: 20;
+}
+
+.Placeorder-btn {
+  width: 100%; /* Full width */
+  background-color: green; /* Green button for Placeorder */
+  color: white; /* White text */
+  border: none; /* No border */
+
+  padding: 10px; /* Padding */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.Placeorder-btn:hover {
+  background-color: darkgreen; /* Darker green on hover */
+}
+
+/* Dropdown styles */
+
+.dropdown {
+  display: none; /* Hide the dropdown by default */
+  position: absolute; /* Position the dropdown relative to the parent */
+  background-color: rgba(
+    217,
+    127,
+    245,
+    0.863
+  ); /* Background color for the dropdown */
+  list-style-type: none; /* Remove bullet points */
+  padding: 10px 0; /* Add padding */
+  margin: 0; /* Remove margin */
+  z-index: 1000; /* Ensure it appears above other elements */
+  border-radius: 10px;
+}
+
+.menu li:hover .dropdown {
+  display: block; /* Show dropdown on hover */
+}
+
+.dropdown li {
+  margin: 0; /* Remove margin for dropdown items */
+}
+
+.dropdown a {
+  padding: 10px 20px; /* Add padding for dropdown links */
+  display: block; /* Make links block elements */
+}
+
+.dropdown a:hover {
+  background-color: rgba(255, 255, 255, 0.192); /* Change background on hover */
+}
+
+/* Learn More */
+.ctn:hover {
+  color: white; /* Change text color on hover */
+  background-color: #fc036b; /* Change background color on hover */
+  border-radius: 5px; /* Optional: round the corners */
+}
+
+/* About Us */
+
+.ctn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff6600; /* Initial button color */
+
+  color: white; /* Text color */
+  text-decoration: none;
+  border-radius: 50px; /* Rounded corners */
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.ctn:hover {
+  color: white; /* Change text color on hover */
+  background-color: #fc036b; /* Change background color on hover */
+}
+
+.about-image {
+  margin-top: 50px; /* Adjust the value as needed */
+  margin-left: 50px;
+  margin-bottom: 50px;
+  max-width: 100%; /* Ensure image is responsive */
+  border-radius: 8px; /* Optional: round the corners */
+}
+
+.about-us .row {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center content horizontally */
+  width: 100%;
+  background-color: #b60e0e1a;
+}
+
+.row .col {
+  flex: 1;
+
+  width: 80%; /* Adjust column width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.col h4 {
+  font-size: 4vmin; /* Responsive font size */
+  color: black;
+  margin: 20px auto;
+}
+
+.col p {
+  font-style: normal;
+  font-size: 2.5vmin; /* Responsive font size */
+  color: black;
+  padding: 0px 40px;
+  line-height: 1.5;
+}
+
+/* Products */
+
+.categories {
+  padding: 20px; /* Add some padding */
+}
+
+.row {
+  display: flex; /* Use flexbox for layout */
+  flex-wrap: wrap; /* Allow items to wrap into the next row */
+
+  justify-content: space-between; /* Space items evenly */
+}
+
+.col-3 {
+  flex: 0 1 calc(33.33% - 20px); /* Take up one-third of the row width, minus gap */
+  margin-bottom: 20px; /* Space between rows */
+}
+
+.product-item {
+  text-align: center; /* Center-align text */
+  background-color: #f9f9f9; /* Optional: background color for product items */
+  border: 1px solid #ddd; /* Optional: border for product items */
+  border-radius: 5px; /* Optional: rounded corners */
+  padding: 15px; /* Space inside product items */
+}
+
+.product-item:hover {
+  background-color: #e0e0e0; /* Change background color on hover */
+  transform: translateY(-5px); /* Slightly lift the item */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.product-item img {
+  max-width: 100%; /* Set maximum width for images */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0 auto; /* Center the image within the product item */
+}
+
+/* Customer Review */
+
+.review .box-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 20px;
+}
+
+.review .box {
+  flex: 0 0 350px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+}
+
+.box:hover {
+  transform: scale(0.95); /* Slightly enlarge the box on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+}
+
+.image:hover img {
+  transform: scale(0.9); /* Slightly enlarge the image on hover */
+  opacity: 0.9; /* Change opacity on hover */
+  border-radius: 10px;
+}
+
+.content h3 {
+  margin-top: 10px;
+}
+
+/* Review section */
+
+.review {
+  margin: 0px 0;
+  text-align: center;
+  background-color: rgba(127, 255, 212, 0.164);
+}
+
+.review p {
+  font-style: normal;
+  font-size: 2.5vmin; /* Responsive font size */
+  color: black;
+  padding: 0px 40px;
+  line-height: 1.5;
+  text-align: center; /* Center paragraph text */
+}
+
+.review .heading {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.stars {
+  color: #ffcc00;
+
+  margin-bottom: 10px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: transform 0.2s; /* Smooth scaling effect */
+}
+
+.user img:hover {
+  transform: scale(0.5); /* Scale up on hover */
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.user-info span {
+  font-size: 0.9em;
+  color: gray;
+}
+
+.fas.fa-quote-right {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #aaa;
+  font-size: 20px;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 600px) {
+  .review .heading {
+    font-size: 1.5rem; /* Decrease heading size on small screens */
+  }
+
+  .user-info h3 {
+    font-size: 12px; /* Adjust user name size */
+  }
+}
+
+/* Broiler section */
+
+.main-broiler {
+  width: 100%;
+  height: 80vh;
+  background-image: url("../images/26.jpeg");
+
+  background-position: center; /* Center the image */
+  background-size: cover; /* Cover the entire container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  display: flex;
+  align-items: end;
+  justify-content: right;
+  position: relative;
+}
+
+.main-broiler .box {
+  background-color: rgb(59, 130, 158);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  margin-right: 30px;
+}
+
+.main-broiler h1 {
+  font-size: 40px;
+  margin: 0;
+}
+.main-broiler p {
+  font-size: 16px;
+  margin-top: 10;
+}
+
+.order-section {
+  background-color: #84b4e7;
+
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.order-section h2 {
+  font-size: 30px;
+  color: #052b53;
+}
+
+.button {
+  display: inline-flex;
+  padding: 10px 20px;
+  background-color: #ff6600; /* Initial button color */
+  color: white; /* Text color */
+  text-decoration: none;
+  border-radius: 50px; /* Rounded corners */
+  transition: all 0.3s ease; /* Smooth transition */
+  font-size: 18px;
+}
+
+.button:hover {
+  transform: scale(0.5);
+  color: white; /* Change text color on hover */
+  background-color: #fc036b; /* Change background color on hover */
+}
+
+/* Layers section */
+
+.main-layers {
+  width: 100%;
+  height: 80vh;
+  background-image: url("../images/30.jpeg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1) contrast(1.2) saturate(1.1); /* Enhance clarity */
+}
+
+.main-layers .box {
+  background-color: rgb(59, 130, 158);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin-right: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.main-layers p {
+  font-size: 18px;
+}
+
+.about {
+  padding: 40px 20px; /* Add padding to the section */
+  background-color: #f9f9f9; /* Optional: Background color */
+  text-align: center; /* Center text */
+}
+
+.row {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-around; /* Space items evenly */
+  align-items: center; /* Center items vertically */
+}
+
+.col {
+  flex: 1; /* Allow columns to grow equally */
+  margin: 0 10px; /* Spacing between columns */
+}
+
+.about-image {
+  max-width: 100%; /* Responsive image */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px; /* Optional: Rounded corners for the image */
+}
+
+h4 {
+  font-size: 1.8rem; /* Adjust font size */
+  color: #333; /* Dark gray color for the heading */
+  margin: 10px 0; /* Space above and below the heading */
+}
+
+p {
+  font-size: 1rem; /* Adjust font size */
+  color: #131212; /* Lighter gray for the paragraph */
+  line-height: 1.6; /* Improve readability with line height */
+  margin: 10px 0; /* Space above and below the paragraph */
+}
+
+/* kienyeji section */
+
+.main-kienyeji {
+  width: 100%;
+  height: 80vh;
+  background-image: url("../images/34.jpeg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1) contrast(1.2) saturate(1.1); /* Enhance clarity */
+}
+
+.main-kienyeji .box {
+  background-color: rgb(59, 130, 158);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin-right: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.main-kienyeji .row {
+  display: flex; /* Flexbox layout for columns */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  margin: 0 -15px; /* Negative margins for alignment */
+}
+
+.main-kienyeji .col {
+  flex: 1; /* Allow columns to grow equally */
+  padding: 15px; /* Padding within each column */
+  min-width: 300px; /* Minimum width for responsiveness */
+}
+
+.main-kienyeji ul {
+  list-style-type: disc; /* Default bullet points */
+  padding-left: 20px; /* Indent for list items */
+}
+
+/* Feeds section */
+
+.main-feeds {
+  width: 100%;
+
+  height: 80vh;
+  background-image: url("../images/35.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-size: 2.5rem; /* Increase font size for prominence */
+  font-weight: bold; /* Make the text bold */
+  color: #333; /* Dark gray color for readability */
+  text-align: center; /* Center the heading */
+  margin-bottom: 20px; /* Space below the heading */
+  margin-top: 0px;
+  position: relative; /* For adding decorative elements */
+}
+
+.heading span {
+  color: #ff6600; /* Different color for the span text */
+  font-size: 2.5rem; /* Slightly smaller size for the span */
+  font-weight: normal; /* Normal weight for the span */
+}
+
+.heading::after {
+  content: ""; /* Add a decorative line */
+  display: block; /* Make it block-level */
+  width: 50px; /* Width of the line */
+  height: 4px; /* Height of the line */
+  background-color: #ff6600; /* Color of the line */
+  margin: 10px auto; /* Center the line below the heading */
+}
+
+.products {
+  padding: 50px 10% 30px;
+}
+
+.product-content .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.product-item {
+  display: grid;
+  background-color: #f9f9f9; /* Optional: background color for product items */
+  border: 1px solid #ddd; /* Optional: border for product items */
+  border-radius: 5px; /* Optional: rounded corners */
+  padding: 15px; /* Space inside product items */
+  overflow: hidden;
+}
+
+.product-item:hover {
+  background-color: #e0e0e0; /* Change background color on hover */
+  transform: translateY(-5px); /* Slightly lift the item */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.product-item img {
+  max-width: 100%; /* Set maximum width for images */
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 8px; /* Smaller button size */
+  background-color: #ff6600; /* Button color */
+  color: white; /* Text color */
+  text-decoration: none;
+  border-radius: 5px; /* Rounded corners */
+  margin-top: 8px; /* Space above button */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.btn:hover {
+  background-color: #fc036b; /* Change background on hover */
+}
+
+@media (max-width: 768px) {
+  .col-4 {
+    flex: 0 1 calc(40% - 15px); /* Two columns on medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .col-4 {
+    flex: 0 1 100%; /* Stack items on small screens */
+  }
+}
+
+/* Complete your Profile section */
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background-color: #eee;
+  padding: 20px;
+  border-radius: 8px;
+  box-sizing: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+imput[type="text"],
+imput[type="email"],
+imput[type="phone"],
+imput[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Footer section */
+
+.footer {
+  width: 100%;
+  padding: 20px 40px; /* Increased padding for better spacing */
+
+  background-color: rgb(241, 156, 86);
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0px;
+  margin: 0;
+}
+
+.footer .box-container {
+  justify-content: space-around;
+  width: 100%;
+  display: flex;
+}
+
+.footer .box {
+  flex: 1;
+  margin: 0 20px; /* Reduced margin for better spacing */
+  border: 1px solid #ddd;
+  flex: 350px;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+}
+
+.footer .box a {
+  color: white;
+
+  text-decoration: none;
+  display: block;
+  margin: 5px 0;
+  transition: color 0.3s ease; /* Transition for hover effect */
+}
+
+.footer .box a:hover {
+  text-decoration: underline;
+  color: #fc036b; /* Change color on hover for better visibility */
+}
+
+.footer p {
+  margin: 10px 0 0; /* Added top margin for spacing */
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.image-container img {
+  max-width: 50px;
+  height: auto;
+  margin: 10px;
+}
+
+/* Media Queries for Responsive Design */
+
+@media (max-width: 768px) {
+  .box-container {
+    flex-wrap: wrap; /* Allow wrapping for small screens */
+    justify-content: center; /* Center items */
+  }
+
+  .box {
+    flex: 1 1 100%; /* Full width for boxes on small screens */
+    margin: 10px 0; /* Space between stacked boxes */
+  }
+
+  .footer {
+    padding: 20px 10px; /* Adjust padding for smaller screens */
+  }
+
+  .footer .box {
+    margin: 0 10px; /* Adjust margin for smaller screens */
+  }
+}

@@ -51,13 +51,17 @@
     <label for="title">Product Title:</label>
     <input type="text" id="title" name="title" required>
 
-    <label for="type">Product Type:</label>
-    <select id="type" name="type" required>
-        <option value="broiler">Broiler</option>
-        <option value="layer">Layer</option>
-        <option value="kienyeji">Kienyeji</option>
-        <option value="feeds">Feeds</option>
-    </select>
+    <div>
+        <label for="id_product_type">Product type:</label>
+        {{ form.product_type }}
+        {% if form.product_type.errors %}
+            <ul class="errorlist">
+                {% for error in form.product_type.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 
     <label for="region">Region:</label>
     <input type="text" id="region" name="region" required>

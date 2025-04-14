@@ -53,28 +53,40 @@
         <div class="order-total">
             <p><strong>Total: Ksh {{ total_price }}</strong></p>
         </div>
-        
-        <div class="payment-section">
-            <h3>Payment Method</h3>
-            <div class="payment-options">
-                <label>
-                    <input type="radio" name="payment_method" value="mpesa" checked>
-                    M-Pesa
-                </label>
-                <!-- Add other payment methods if needed -->
-            </div>
-            
-            <button class="make-payment-btn">Make Payment</button>
+    </div>
+
+    <div class="payment-section">
+        <h3>Payment Method</h3>
+        <div class="payment-options">
+            <label>
+                <input type="radio" name="payment_method" value="mpesa" checked>
+                M-Pesa
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="card">
+                Card
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="cash">
+                Cash
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="bank">
+                Bank
+            </label>
         </div>
+
+        <!-- Wrap the button in a form -->
+        <form method="POST" action="{% url 'create_order_from_cart' %}">
+            {% csrf_token %}  <!-- Include CSRF token for security -->
+            <button type="submit" class="make-payment-btn">Make Payment</button>
+        </form>
     </div>
     {% else %}
     <div class="empty-cart-message">
-        <p>Your cart is empty. <a href="{% url 'feeds' %}">Continue shopping</a></p>
+        <p>Your cart is empty. <a href="{%url 'dashboard'%}">Continue shopping</a></p>
     </div>
     {% endif %}
 </div>
 
-<style>
-    /* Your existing styles... */
-</style>
 {% endblock %}

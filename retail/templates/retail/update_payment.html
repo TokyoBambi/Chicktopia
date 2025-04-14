@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="update-payment-container">
+    <h1>Update Payment</h1>
+
+    <div class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="cart-items-summary">
+            {% for item in cart_items %}
+            <div class="checkout-item">
+                <img src="{{ item.imageUrl }}" alt="{{ item.title }}" width="80">
+                <div class="item-details">
+                    <h4>{{ item.title }}</h4>
+                    <p>Ksh {{ item.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p class="item-subtotal">Subtotal: Ksh {{ item.total }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p style="color: red;">No items in cart_items list</p>
+            {% endfor %}
+        </div>
+
+        <div class="order-total">
+            <p><strong>Total: Ksh {{ total_price }}</strong></p>
+        </div>
+    </div>
+
+    <div class="payment-section">
+        <h3>Payment Method</h3>
+        <div class="payment-options">
+            <label>
+                <input type="radio" name="payment_method" value="mpesa" checked>
+                M-Pesa
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="card">
+                Card
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="cash">
+                Cash
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="bank">
+                Bank
+            </label>
+        </div>
+
+        <button class="make-payment-btn" id="make-payment-btn">Make Payment</button>
+    </div>
+</div>
+{% endblock %}

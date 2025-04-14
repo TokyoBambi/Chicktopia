@@ -8,13 +8,13 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 from django.contrib import messages
 from django.utils import timezone
+from django.db import transaction
+from decimal import Decimal  # Import Decimal for precise decimal arithmetic
 
-from .models import Order, OrderItem, Payment, Sale
+from .models import Order, OrderItem, Payment, Sale, Product
 from products.models import Product
 from accounts.models import Customer
 
-
-# ----- Cart Views -----
 
 def update_cart(request):
     """
@@ -39,15 +39,8 @@ def update_cart(request):
         request.session['count'] = count
         request.session['cart_items'] = cart_items
         request.session['total_price'] = total_price
-        request.session.modified = True  # Mark session as modified
-        request.session.save()  # Explicitly save the session
-
-        # Verify the data was saved correctly
-        print("Verifying session data:")
-        print(f"Session cart_items: {request.session.get('cart_items')}")
-        print(f"Session total_price: {request.session.get('total_price')}")
-        print(f"Session count: {request.session.get('count')}")
-        print(f"Session keys: {list(request.session.keys())}")
+        request.session.modified = True
+        request.session.save()
 
         return JsonResponse({'success': True})
     except Exception as e:
@@ -59,42 +52,26 @@ def checkout_view(request):
     """
     Checkout view that displays all selected cart items
     """
-    import json
-    from django import forms
-
-    # Debug print of session data
-    print("SESSION DATA:")
-    for key in request.session.keys():
-        print(f"  {key}: {request.session[key]}")
-
-    # Get cart data from session
     cart_items = request.session.get('cart_items', [])
     total_price = request.session.get('total_price', 0)
-    # Note: 'count' not 'cart_item_count'
     cart_item_count = request.session.get('count', 0)
 
-    # Ensure cart_items is a list
     if isinstance(cart_items, str):
         try:
             cart_items = json.loads(cart_items)
         except json.JSONDecodeError:
             cart_items = []
 
-    # Format cart items for display
     for item in cart_items:
         try:
-            # Parse and format price to ensure consistent display
             price = float(item.get('price', 0))
             quantity = int(item.get('quantity', 1))
 
-            # Calculate total for each item
             item_total = price * quantity
 
-            # Format for display - this is important to match the template
             item['price'] = "{:.2f}".format(price)
             item['total'] = "{:.2f}".format(item_total)
 
-            # Ensure all required keys exist
             if 'imageUrl' not in item:
                 item['imageUrl'] = '/static/img/placeholder.png'
 
@@ -102,29 +79,23 @@ def checkout_view(request):
                 item['title'] = "Unknown Item"
 
         except (ValueError, TypeError) as e:
-            print(f"Error processing item {item}: {str(e)}")
             item['price'] = "0.00"
             item['total'] = "0.00"
 
-    # Format total price for display
     try:
         formatted_total_price = "{:.2f}".format(float(total_price))
     except (ValueError, TypeError):
         formatted_total_price = "0.00"
 
-    # Debug cart data after processing
-    print(f"Processed cart items: {cart_items}")
-    print(f"Formatted total price: {formatted_total_price}")
+    print(f"Cart items received: {cart_items}")  # Check the cart items
 
-    # Add debug info to context
     debug_info = {
         'has_items': bool(cart_items),
-        'num_items': len(cart_items),
+        'num_items': sum(cart_item['quantity'] for cart_item in cart_items),
         'session_keys': list(request.session.keys()),
         'cart_data': json.dumps(cart_items, indent=2)
     }
 
-    # Create context for template
     context = {
         'cart_items': cart_items,
         'total_price': formatted_total_price,
@@ -135,20 +106,15 @@ def checkout_view(request):
     return render(request, 'retail/checkout.html', context)
 
 
-# ----- Order Views -----
-
 @login_required
 def order_list(request):
     """View to display all orders, with optional filtering"""
-    # Get filter parameters
     status = request.GET.get('status')
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
 
-    # Start with all orders
     orders = Order.objects.all()
 
-    # Apply filters if provided
     if status:
         orders = orders.filter(status=status)
     if date_from:
@@ -188,14 +154,12 @@ def order_detail(request, order_id):
 def create_order(request):
     """View to create a new order"""
     if request.method == 'POST':
-        # Extract form data
         user_id = request.POST.get('user')
         status = request.POST.get('status', 'pending')
         shipping_address = request.POST.get('shipping_address')
         phone_number = request.POST.get('phone_number')
         notes = request.POST.get('notes')
 
-        # Create a new order
         order = Order(
             id=uuid.uuid4(),
             status=status,
@@ -204,7 +168,6 @@ def create_order(request):
             notes=notes
         )
 
-        # Set user if provided
         if user_id:
             from django.contrib.auth.models import User
             try:
@@ -215,10 +178,8 @@ def create_order(request):
         elif request.user.is_authenticated:
             order.user = request.user
 
-        # Save the order
         order.save()
 
-        # Process product items
         product_ids = request.POST.getlist('product')
         quantities = request.POST.getlist('quantity')
 
@@ -236,14 +197,12 @@ def create_order(request):
                 except (Product.DoesNotExist, ValueError):
                     continue
 
-        # Update total amount
         order.total_amount = order.get_order_total
         order.save()
 
         messages.success(request, f'Order {order.id} created successfully!')
         return redirect('order_detail', order_id=order.id)
 
-    # Get data for the form
     products = Product.objects.all()
 
     context = {
@@ -256,73 +215,44 @@ def create_order(request):
 
 @login_required
 def update_order(request, order_id):
-    """View to update an existing order"""
-    order = get_object_or_404(Order, id=order_id)
-    order_items = order.orderitem_set.all()
+    """Update an existing order based on the current cart items."""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
 
-    if request.method == 'POST':
-        # Update order details
-        order.status = request.POST.get('status', order.status)
-        order.shipping_address = request.POST.get(
-            'shipping_address', order.shipping_address)
-        order.phone_number = request.POST.get(
-            'phone_number', order.phone_number)
-        order.notes = request.POST.get('notes', order.notes)
-        order.save()
+    if request.method == "POST":
+        cart_items = request.session.get('cart_items', [])
+        total_price = 0
 
-        # Update existing items (this is simplified - a real form would be more complex)
-        item_ids = request.POST.getlist('item_id')
-        item_quantities = request.POST.getlist('item_quantity')
+        with transaction.atomic():
+            # Clear existing order items
+            order.orderitem_set.all().delete()
 
-        if len(item_ids) == len(item_quantities):
-            for i in range(len(item_ids)):
-                try:
-                    item = OrderItem.objects.get(id=item_ids[i], order=order)
-                    quantity = int(item_quantities[i])
-                    if quantity > 0:
-                        item.quantity = quantity
-                        item.save()
-                    else:
-                        item.delete()
-                except (OrderItem.DoesNotExist, ValueError):
-                    continue
+            for item in cart_items:
+                product = get_object_or_404(Product, title=item['title'])
+                quantity = item['quantity']
 
-        # Add new items
-        new_product_ids = request.POST.getlist('new_product')
-        new_quantities = request.POST.getlist('new_quantity')
+                if product.quantity >= quantity:
+                    product.quantity -= quantity
+                    product.save()
 
-        if len(new_product_ids) == len(new_quantities):
-            for i in range(len(new_product_ids)):
-                try:
-                    product = Product.objects.get(id=new_product_ids[i])
-                    quantity = int(new_quantities[i])
-                    if quantity > 0:
-                        OrderItem.objects.create(
-                            order=order,
-                            product=product,
-                            quantity=quantity
-                        )
-                except (Product.DoesNotExist, ValueError):
-                    continue
+                    # Create new order items
+                    order_item = OrderItem(
+                        order=order, product=product, quantity=quantity)
+                    order_item.save()
 
-        # Update total amount
-        order.total_amount = order.get_order_total
-        order.save()
+                    total_price += float(item['price']) * quantity
+                else:
+                    return render(request, 'error.html', {'message': 'Not enough stock for ' + product.title})
 
-        messages.success(request, f'Order {order.id} updated successfully!')
-        return redirect('order_detail', order_id=order.id)
+            # Update order total
+            order.total_amount = total_price
+            order.save()
 
-    # Get data for the form
-    products = Product.objects.all()
+            # Update payment and sales records as needed
+            # (Similar logic as in create_order_from_cart)
 
-    context = {
-        'order': order,
-        'order_items': order_items,
-        'products': products,
-        'status_choices': Order.ORDER_STATUS_CHOICES,
-    }
+        return redirect('order_success')
 
-    return render(request, 'retail/update_order.html', context)
+    return render(request, 'retail/update_order.html', {'order': order})
 
 
 @login_required
@@ -331,7 +261,7 @@ def delete_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
     if request.method == 'POST':
-        # Only allow deletion if order is pending
+
         if order.status == 'pending':
             order.delete()
             messages.success(request, 'Order deleted successfully!')
@@ -349,72 +279,115 @@ def delete_order(request, order_id):
 @login_required
 def create_order_from_cart(request):
     """Create an order from cart items in session"""
-    # Get cart data
+
+    if request.method == "POST":
+        cart_items = request.session.get('cart_items', [])
+        total_price = Decimal(0)  # Initialize total_price as a Decimal
+        print(f"Cart items received: {cart_items}")  # Debugging line
+
+        if not cart_items:
+            return render(request, 'error.html', {'message': 'Your cart is empty.'})
+
+        with transaction.atomic():  # Ensure atomicity
+            # Create the order first
+            order = Order.objects.create(
+                user=request.user,  # Associate the order with the logged-in user
+                total_amount=Decimal(0.00),  # Initialize total amount
+            )
+
+            for item in cart_items:
+                # Check if 'title' and 'quantity' are in the item
+                if 'title' not in item or 'quantity' not in item:
+                    return render(request, 'error.html', {'message': 'Product title or quantity is missing in cart items.'})
+
+                # Fetch the product by title
+                product = get_object_or_404(
+                    Product, title=item['title'])  # Fetch product by title
+                quantity = item['quantity']
+
+                # Check if enough quantity is available
+                if product.quantity >= quantity:
+                    product.quantity -= quantity  # Reduce the product quantity
+                    product.save()  # Save the updated product
+
+                    # Create an order item entry
+                    order_item = OrderItem(
+                        order=order,  # Link the order item to the order
+                        product=product,
+                        quantity=quantity,
+                    )
+                    order_item.save()  # Save the order item instance
+
+                    # Update total price for the order
+                    # Convert price to Decimal
+                    total_price += Decimal(item['price']) * quantity
+                else:
+                    return render(request, 'error.html', {'message': f'Not enough stock for {product.title}.'})
+
+            # Update the total amount in the order
+            order.total_amount = total_price
+            order.save()  # Save the order instance
+
+            # Create a payment for the order
+            payment = Payment.objects.create(
+                order=order,
+                payment_method='credit_card',  # Example payment method, adjust as needed
+                amount_paid=total_price,
+                status='completed',  # Assuming the payment is successful
+            )
+
+            # Check if a sale already exists for the customer
+            sale, created = Sale.objects.get_or_create(
+                customer=request.user.consumer,  # Assuming you have a Customer model linked to User
+                # Set defaults if creating a new sale
+                defaults={'order': order, 'total_amount': total_price}
+            )
+
+            if not created:
+                # If the sale already exists, update the total amount and add new products
+                sale.total_amount += total_price  # Update total amount
+                sale.save()  # Save the updated sale
+
+            # Add products to the sale
+            for item in order.orderitem_set.all():
+                sale.products.add(item.product)  # Add each product to the sale
+
+            # Clear the cart after successful order placement
+            request.session['cart_items'] = []  # Clear the cart
+            request.session['cart_item_count'] = 0  # Reset cart item count
+
+        # Redirect to a success page or order summary
+        return redirect('order_success')  # Replace with your success URL
+
+    # Render checkout page if not POST
+    return render(request, 'retail/cart_to_order.html')
+
+
+@login_required
+def order_success(request):
+    """Display order success page with order details"""
+    # Assuming you want to show the latest order for the user
+    order = Order.objects.filter(
+        user=request.user).order_by('-date_ordered').first()
+
+    if order is None:
+        return render(request, 'error.html', {'message': 'No order found.'})
+
+    # Get cart items from the session
     cart_items = request.session.get('cart_items', [])
-    total_price = request.session.get('total_price', 0)
 
-    if not cart_items:
-        messages.error(request, 'Your cart is empty!')
-        return redirect('checkout')
+    return render(request, 'retail/order_success.html', {'order': order, 'cart_items': cart_items})
 
-    if request.method == 'POST':
-        # Create new order
-        order = Order(
-            id=uuid.uuid4(),
-            user=request.user if request.user.is_authenticated else None,
-            status='pending',
-            shipping_address=request.POST.get('shipping_address'),
-            phone_number=request.POST.get('phone_number'),
-            notes=request.POST.get('notes'),
-            total_amount=total_price
-        )
-        order.save()
-
-        # Create order items from cart
-        for item in cart_items:
-            try:
-                product_id = item.get('id')
-                quantity = item.get('quantity', 1)
-                product = Product.objects.get(id=product_id)
-
-                OrderItem.objects.create(
-                    order=order,
-                    product=product,
-                    quantity=quantity
-                )
-            except Product.DoesNotExist:
-                continue
-
-        # Clear cart
-        request.session['cart_items'] = []
-        request.session['cart_item_count'] = 0
-        request.session['total_price'] = 0
-        request.session.save()
-
-        messages.success(request, 'Order created successfully!')
-        return redirect('order_detail', order_id=order.id)
-
-    context = {
-        'cart_items': cart_items,
-        'total_price': total_price,
-    }
-
-    return render(request, 'retail/cart_to_order.html', context)
-
-
-# ----- Payment Views -----
 
 @login_required
 def payment_list(request):
     """View to display all payments"""
-    # Get filter parameters
+
     status = request.GET.get('status')
     method = request.GET.get('method')
 
-    # Start with all payments
     payments = Payment.objects.all()
 
-    # Apply filters
     if status:
         payments = payments.filter(status=status)
     if method:
@@ -443,50 +416,32 @@ def payment_detail(request, payment_id):
 
 @login_required
 def create_payment(request, order_id):
-    """View to create a new payment for an order"""
-    order = get_object_or_404(Order, id=order_id)
+    """Create a payment for the specified order."""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
 
-    # Check if payment already exists
-    try:
-        existing_payment = Payment.objects.get(order=order)
-        messages.warning(
-            request, f'A payment already exists for this order: {existing_payment.id}')
-        return redirect('payment_detail', payment_id=existing_payment.id)
-    except Payment.DoesNotExist:
-        pass
+    if request.method == "POST":
+        # Check if a payment already exists for this order
+        existing_payment = Payment.objects.filter(order=order).first()
+        if existing_payment:
+            return render(request, 'error.html', {'message': 'Payment already exists for this order.'})
 
-    if request.method == 'POST':
-        # Create new payment
-        payment_method = request.POST.get('payment_method')
-        amount_paid = request.POST.get('amount_paid', order.total_amount)
-        transaction_id = request.POST.get('transaction_id')
-        status = request.POST.get('status', 'pending')
+        # Assuming you have a payment method and amount in the request
+        payment_method = request.POST.get(
+            'payment_method', 'credit_card')  # Default payment method
+        amount_paid = order.total_amount  # Use the order's total amount
 
-        payment = Payment(
-            id=uuid.uuid4(),
+        # Create the payment
+        payment = Payment.objects.create(
             order=order,
             payment_method=payment_method,
             amount_paid=amount_paid,
-            transaction_id=transaction_id,
-            status=status
+            status='completed',  # Assuming the payment is successful
         )
-        payment.save()
 
-        # Update order status if payment is completed
-        if payment.status == 'completed':
-            order.status = 'paid'
-            order.save()
+        # Redirect to a success page or order summary
+        return redirect('payment_success')  # Replace with your success URL
 
-        messages.success(request, 'Payment created successfully!')
-        return redirect('payment_detail', payment_id=payment.id)
-
-    context = {
-        'order': order,
-        'payment_method_choices': Payment.PAYMENT_METHOD_CHOICES,
-        'payment_status_choices': Payment.PAYMENT_STATUS_CHOICES,
-    }
-
-    return render(request, 'retail/create_payment.html', context)
+    return render(request, 'retail/create_payment.html', {'order': order})
 
 
 @login_required
@@ -496,7 +451,7 @@ def update_payment(request, payment_id):
     order = payment.order
 
     if request.method == 'POST':
-        # Update payment details
+
         payment.payment_method = request.POST.get(
             'payment_method', payment.payment_method)
         payment.amount_paid = request.POST.get(
@@ -506,7 +461,6 @@ def update_payment(request, payment_id):
         payment.status = request.POST.get('status', payment.status)
         payment.save()
 
-        # Update order status based on payment status
         if payment.status == 'completed' and order.status == 'pending':
             order.status = 'paid'
             order.save()
@@ -527,25 +481,20 @@ def update_payment(request, payment_id):
     return render(request, 'retail/update_payment.html', context)
 
 
-# ----- Sale Views -----
-
 @login_required
 def sale_list(request):
     """View to display all sales"""
-    # Get filter parameters
+
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
 
-    # Start with all sales
     sales = Sale.objects.all()
 
-    # Apply filters
     if date_from:
         sales = sales.filter(sale_date__gte=date_from)
     if date_to:
         sales = sales.filter(sale_date__lte=date_to)
 
-    # Calculate totals
     total_sales_amount = sales.aggregate(Sum('total_amount'))[
         'total_amount__sum'] or 0
     total_profit = sales.aggregate(Sum('profit'))['profit__sum'] or 0
@@ -573,54 +522,26 @@ def sale_detail(request, sale_id):
 
 
 @login_required
-def create_sale(request):
-    """View to create a new sale record"""
-    if request.method == 'POST':
-        # Get form data
-        order_id = request.POST.get('order')
-        customer_id = request.POST.get('customer')
-        product_ids = request.POST.getlist('products')
-        total_amount = request.POST.get('total_amount')
-        profit = request.POST.get('profit')
+def create_sale(request, order_id):
+    """Create a sale for the specified order."""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
 
-        try:
-            # Get related objects
-            order = Order.objects.get(id=order_id)
-            customer = Customer.objects.get(id=customer_id)
+    if request.method == "POST":
+        # Create the sale
+        sale = Sale.objects.create(
+            order=order,
+            customer=request.user.consumer,  # Assuming you have a Customer model linked to User
+            total_amount=order.total_amount,  # Total amount for the sale
+        )
 
-            # Create sale
-            sale = Sale(
-                id=uuid.uuid4(),
-                order=order,
-                customer=customer,
-                sale_date=timezone.now(),
-                total_amount=total_amount,
-                profit=profit
-            )
-            sale.save()
+        # Add products to the sale
+        for item in order.orderitem_set.all():
+            sale.products.add(item.product)  # Add each product to the sale
 
-            # Add products
-            products = Product.objects.filter(id__in=product_ids)
-            sale.products.set(products)
+        # Redirect to a success page or order summary
+        return redirect('sale_success')  # Replace with your success URL
 
-            messages.success(request, 'Sale recorded successfully!')
-            return redirect('sale_detail', sale_id=sale.id)
-
-        except (Order.DoesNotExist, Customer.DoesNotExist):
-            messages.error(request, 'Invalid order or customer selected!')
-
-    # Get data for the form
-    orders = Order.objects.filter(status='delivered')
-    customers = Customer.objects.all()
-    products = Product.objects.all()
-
-    context = {
-        'orders': orders,
-        'customers': customers,
-        'products': products,
-    }
-
-    return render(request, 'retail/create_sale.html', context)
+    return render(request, 'retail/create_sale.html', {'order': order})
 
 
 @login_required
@@ -629,24 +550,22 @@ def update_sale(request, sale_id):
     sale = get_object_or_404(Sale, id=sale_id)
 
     if request.method == 'POST':
-        # Get form data
+
         customer_id = request.POST.get('customer')
         product_ids = request.POST.getlist('products')
         total_amount = request.POST.get('total_amount')
         profit = request.POST.get('profit')
 
         try:
-            # Update customer if changed
+
             if customer_id:
                 customer = Customer.objects.get(id=customer_id)
                 sale.customer = customer
 
-            # Update other fields
             sale.total_amount = total_amount
             sale.profit = profit
             sale.save()
 
-            # Update products
             if product_ids:
                 products = Product.objects.filter(id__in=product_ids)
                 sale.products.set(products)
@@ -657,7 +576,6 @@ def update_sale(request, sale_id):
         except Customer.DoesNotExist:
             messages.error(request, 'Invalid customer selected!')
 
-    # Get data for the form
     customers = Customer.objects.all()
     products = Product.objects.all()
 
@@ -677,7 +595,7 @@ def delete_sale(request, sale_id):
     sale = get_object_or_404(Sale, id=sale_id)
 
     if request.method == 'POST':
-        if request.user.is_staff:  # Only allow staff to delete sales
+        if request.user.is_staff:
             sale.delete()
             messages.success(request, 'Sale record deleted successfully!')
             return redirect('sale_list')
@@ -690,6 +608,3 @@ def delete_sale(request, sale_id):
     }
 
     return render(request, 'retail/delete_sale.html', context)
-
-
-# ----- Dashboard View -----
