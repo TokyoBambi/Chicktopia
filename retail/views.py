@@ -608,3 +608,38 @@ def delete_sale(request, sale_id):
     }
 
     return render(request, 'retail/delete_sale.html', context)
+
+
+@login_required
+def buyer_report(request):
+    """View to display the order history and spending for the buyer."""
+    orders = Order.objects.filter(user=request.user).order_by('-date_ordered')
+    total_spending = orders.aggregate(Sum('total_amount'))[
+        'total_amount__sum'] or 0
+
+    context = {
+        'orders': orders,
+        'total_spending': total_spending,
+    }
+
+    return render(request, 'retail/buyer_report.html', context)
+
+
+@login_required
+def seller_report(request):
+    """View to display sales metrics for the seller."""
+    sales = Sale.objects.filter(
+        customer__user=request.user)  # Assuming you have a way to link products to sellers
+    total_sales = sales.count()
+    total_revenue = sales.aggregate(Sum('total_amount'))[
+        'total_amount__sum'] or 0
+    total_profit = sales.aggregate(Sum('profit'))['profit__sum'] or 0
+
+    context = {
+        'sales': sales,
+        'total_sales': total_sales,
+        'total_revenue': total_revenue,
+        'total_profit': total_profit,
+    }
+
+    return render(request, 'retail/seller_report.html', context)
