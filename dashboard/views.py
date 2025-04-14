@@ -26,3 +26,11 @@ def dashboard(request):
         "cart_item_count": request.session.get('cart_item_count', 0)
     }
     return render(request, "dashboard/dashboard.html", context)
+
+
+def services_view(request):
+    return render(request, 'dashboard/services.html')
+
+
+def about_us_view(request):
+    return render(request, 'about_us.html')

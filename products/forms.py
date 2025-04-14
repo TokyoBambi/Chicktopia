@@ -5,7 +5,7 @@ from .models import Product
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'type', 'region',
+        fields = ['title', 'product_type', 'region',
                   'description', 'quantity', 'price', 'photo']
         exclude = []
 
@@ -17,7 +17,7 @@ class ProductForm(forms.ModelForm):
         })
     )
 
-    type = forms.ChoiceField(
+    product_type = forms.ChoiceField(
         required=True,
         choices=[
             ('broiler', 'Broiler'),

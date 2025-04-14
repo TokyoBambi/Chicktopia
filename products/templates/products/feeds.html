@@ -15,61 +15,30 @@
 
 <!-- Feed Types -->
 
-<section class="Feeds" id="Feeds"> 
+<section class="products" id="products"> 
     <h2 class="heading">Chicken <span>Feed</span></h2>
     
     <div class="product-content">
-        <div class="row">
-            <div class="feeds-item">
-                <img src="{% static 'images/36.png' %}" alt="Broiler Starter">
-                <h3 class="product-title">Broiler Starter</h3>
-                <span class="price" data-price="1200">Ksh 1200</span>
-                <a href="#" class="btn" data-title="Broiler Starter" data-price="1200">Buy Now</a>
-            </div>
-    
-            <div class="feeds-item">
-                <img src="{% static 'images/37.png' %}" alt="Broiler Grower">
-                <h3 class="product-title">Broiler Grower</h3>
-                <span class="price" data-price="1500">Ksh 1500</span>
-                <a href="#" class="btn" data-title="Broiler Grower" data-price="1500">Buy Now</a>
-            </div>
-    
-            <div class="feeds-item">
-                <img src="{% static 'images/38.png' %}" alt="Broiler Finisher">
-                <h3 class="product-title">Broiler Finisher</h3>
-                <span class="price" data-price="2000">Ksh 2000</span>
-                <a href="#" class="btn" data-title="Broiler Finisher" data-price="2000">Buy Now</a>
-            </div>
-    
-            <div class="feeds-item">
-                <img src="{% static 'images/39.png' %}" alt="Layer Starter">
-                <h3 class="product-title">Layer Starter</h3>
-                <span class="price" data-price="1200">Ksh 1200</span>
-                <a href="#" class="btn" data-title="Layer Starter" data-price="1200">Buy Now</a>
-            </div>
-    
-            <div class="feeds-item">
-                <img src="{% static 'images/40.png' %}" alt="Layer Grower">
-                <h3 class="product-title">Layer Grower</h3>
-                <span class="price" data-price="1500">Ksh 1500</span>
-                <a href="#" class="btn" data-title="Layer Grower" data-price="1500">Buy Now</a>
-            </div>
-    
-            <div class="feeds-item">
-                <img src="{% static 'images/41.png' %}" alt="Layer Finisher">
-                <h3 class="product-title">Layer Finisher</h3>
-                <span class="price" data-price="2000">Ksh 2000</span>
-                <a href="#" class="btn" data-title="Layer Finisher" data-price="2000">Buy Now</a>
-            </div>
+        
+        <div class="box-container">
+            <div class="row">
 
-            <div class="feeds-item">
-                <img src="{% static 'images/42.png' %}" alt="Kienyeji">
-                <h3 class="product-title">Kienyeji</h3>
-                <span class="price" data-price="2000">Ksh 2000</span>
-                <a href="#" class="btn" data-title="Kienyeji" data-price="2000">Buy Now</a>
+                {% for product in products %}
+                    <div class="col-4">
+                        <div class="product-item">
+                            <img src="{{ product.photo.url }}" alt="{{ product.title }}">
+                            <h3>{{ product.title }}</h3>
+                            <p>{{ product.description }}</p>
+                            <p>Price: Ksh {{ product.price }}</p>
+                            <a href="#" class="btn" data-title="{{ product.title }}" data-price="{{ product.price }}">Buy Now</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
         </div>
-    </div>   
+
+    </div>
 </section>
 
 {% include 'footer.html' %}

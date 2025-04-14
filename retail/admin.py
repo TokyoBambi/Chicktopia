@@ -69,9 +69,8 @@ class PaymentAdmin(admin.ModelAdmin):
     )
 
     def get_readonly_fields(self, request, obj=None):
-        # Make order field readonly if payment already exists
         if obj:
-            return self.readonly_fields + ('order',)
+            return self.readonly_fields + ['order',]
         return self.readonly_fields
 
 
